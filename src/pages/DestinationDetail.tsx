@@ -1,0 +1,217 @@
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import Navbar from '@/components/Navbar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, MapPin, Calendar, Heart, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+
+interface Destination {
+  id: string;
+  name: string;
+  country: string;
+  description: string;
+  best_time_to_visit: string;
+  highlights: string[];
+  image_url: string;
+}
+
+const DestinationDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [destination, setDestination] = useState<Destination | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (id) {
+      fetchDestination();
+      checkIfSaved();
+    }
+  }, [id]);
+
+  const fetchDestination = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('destinations')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+      setDestination(data);
+    } catch (error: any) {
+      toast.error('Failed to load destination');
+      navigate('/destinations');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkIfSaved = async () => {
+    if (!user) return;
+    
+    try {
+      const { data } = await supabase
+        .from('saved_destinations')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('destination_id', id)
+        .maybeSingle();
+
+      setIsSaved(!!data);
+    } catch (error) {
+      // Silently fail
+    }
+  };
+
+  const handleSaveDestination = async () => {
+    if (!user || !destination) return;
+
+    try {
+      if (isSaved) {
+        await supabase
+          .from('saved_destinations')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('destination_id', destination.id);
+        setIsSaved(false);
+        toast.success('Removed from saved destinations');
+      } else {
+        await supabase
+          .from('saved_destinations')
+          .insert({
+            user_id: user.id,
+            destination_id: destination.id,
+          });
+        setIsSaved(true);
+        toast.success('Added to saved destinations');
+      }
+    } catch (error: any) {
+      toast.error('Failed to update saved destinations');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex items-center justify-center h-[60vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!destination) return null;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      
+      <div className="container mx-auto px-4 py-8">
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/destinations')}
+          className="mb-6"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Destinations
+        </Button>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          <div>
+            <img
+              src={destination.image_url}
+              alt={destination.name}
+              className="w-full h-[400px] object-cover rounded-lg shadow-hover"
+            />
+          </div>
+
+          <div>
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h1 className="text-4xl font-bold text-foreground mb-2">
+                  {destination.name}
+                </h1>
+                <p className="text-lg text-muted-foreground flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  {destination.country}
+                </p>
+              </div>
+              <Button
+                variant={isSaved ? "default" : "outline"}
+                size="icon"
+                onClick={handleSaveDestination}
+              >
+                <Heart className={`h-5 w-5 ${isSaved ? 'fill-current' : ''}`} />
+              </Button>
+            </div>
+
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>About</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{destination.description}</p>
+              </CardContent>
+            </Card>
+
+            {destination.best_time_to_visit && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    Best Time to Visit
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{destination.best_time_to_visit}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {destination.highlights && destination.highlights.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Highlights</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    {destination.highlights.map((highlight, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span className="text-muted-foreground">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="mt-6 flex gap-4">
+              <Button 
+                onClick={() => navigate('/packages')}
+                className="flex-1"
+              >
+                View Packages
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => navigate('/hotels')}
+                className="flex-1"
+              >
+                Find Hotels
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DestinationDetail;

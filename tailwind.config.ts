@@ -57,6 +57,21 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        sky: {
+          light: "hsl(var(--sky-light))",
+          lighter: "hsl(var(--sky-lighter))",
+        },
+        ocean: "hsl(var(--ocean))",
+        sunset: "hsl(var(--sunset))",
+        sand: "hsl(var(--sand))",
+      },
+      backgroundImage: {
+        'gradient-hero': 'var(--gradient-hero)',
+        'gradient-card': 'var(--gradient-card)',
+      },
+      boxShadow: {
+        'card': 'var(--shadow-card)',
+        'hover': 'var(--shadow-hover)',
       },
       borderRadius: {
         lg: "var(--radius)",
