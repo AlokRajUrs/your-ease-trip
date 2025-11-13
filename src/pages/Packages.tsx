@@ -5,9 +5,18 @@ import Navbar from '@/components/Navbar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, DollarSign, Loader2, MapPin } from 'lucide-react';
+import { Calendar, DollarSign, Loader2, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
+
+interface PackageItinerary {
+  id: string;
+  day_number: number;
+  title: string;
+  description: string;
+  activities: string[];
+  meals_included: string[];
+}
 
 interface Package {
   id: string;
@@ -19,11 +28,13 @@ interface Package {
   image_url: string;
   includes: string[];
   destinations: { name: string; country: string } | null;
+  package_itinerary: PackageItinerary[];
 }
 
 const Packages = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedPackage, setExpandedPackage] = useState<string | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -37,7 +48,15 @@ const Packages = () => {
         .from('packages')
         .select(`
           *,
-          destinations (name, country)
+          destinations (name, country),
+          package_itinerary (
+            id,
+            day_number,
+            title,
+            description,
+            activities,
+            meals_included
+          )
         `)
         .order('price', { ascending: true });
 
@@ -157,6 +176,51 @@ const Packages = () => {
                           </li>
                         ))}
                       </ul>
+                    </div>
+                  )}
+
+                  {pkg.package_itinerary && pkg.package_itinerary.length > 0 && (
+                    <div className="mb-4">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-between p-2 h-auto"
+                        onClick={() => setExpandedPackage(expandedPackage === pkg.id ? null : pkg.id)}
+                      >
+                        <span className="font-semibold text-sm">View Itinerary</span>
+                        {expandedPackage === pkg.id ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </Button>
+                      
+                      {expandedPackage === pkg.id && (
+                        <div className="mt-3 space-y-3 max-h-64 overflow-y-auto">
+                          {pkg.package_itinerary
+                            .sort((a, b) => a.day_number - b.day_number)
+                            .map((day) => (
+                              <div key={day.id} className="border-l-2 border-primary pl-3">
+                                <p className="font-semibold text-sm text-primary">
+                                  Day {day.day_number}: {day.title}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {day.description}
+                                </p>
+                                {day.activities && day.activities.length > 0 && (
+                                  <div className="mt-1">
+                                    <p className="text-xs font-medium">Activities:</p>
+                                    <ul className="text-xs text-muted-foreground list-disc list-inside">
+                                      {day.activities.map((activity, idx) => (
+                                        <li key={idx}>{activity}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                        </div>
+                      )}
                     </div>
                   )}
                   
