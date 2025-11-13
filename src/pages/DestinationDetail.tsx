@@ -288,7 +288,7 @@ const DestinationDetail = () => {
               </Button>
               <Button 
                 variant="outline"
-                onClick={() => navigate('/hotels')}
+                onClick={() => navigate(`/hotels?destination=${id}`)}
                 className="flex-1"
               >
                 Find Hotels
