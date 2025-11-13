@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
@@ -28,22 +28,29 @@ const Hotels = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const destinationId = searchParams.get('destination');
 
   useEffect(() => {
     fetchHotels();
-  }, []);
+  }, [destinationId]);
 
   const fetchHotels = async () => {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('hotels')
         .select(`
           *,
           destinations (name, country)
-        `)
-        .order('rating', { ascending: false });
+        `);
+      
+      if (destinationId) {
+        query = query.eq('destination_id', destinationId);
+      }
+      
+      const { data, error } = await query.order('rating', { ascending: false });
 
       if (error) throw error;
       setHotels(data || []);
