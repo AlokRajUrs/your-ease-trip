@@ -66,10 +66,13 @@ const Destinations = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Popular Destinations
+            Explore Chikkamagaluru
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Explore the world's most beautiful places and create unforgettable memories
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-2">
+            Coffee, Hills & Waterfalls
+          </p>
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto mb-8">
+            Discover the breathtaking beauty of Karnataka's coffee land with pristine waterfalls, majestic peaks, and serene landscapes
           </p>
           
           <div className="max-w-md mx-auto relative">
