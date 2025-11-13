@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, MapPin, Calendar, Heart, Loader2 } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Heart, Loader2, Clock, DollarSign, Bus, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Destination {
@@ -16,6 +16,12 @@ interface Destination {
   best_time_to_visit: string;
   highlights: string[];
   image_url: string;
+  visiting_hours?: string;
+  entry_fee?: string;
+  transport_details?: string;
+  distance_from_town?: string;
+  travel_time?: string;
+  location_coordinates?: string;
 }
 
 const DestinationDetail = () => {
@@ -175,7 +181,7 @@ const DestinationDetail = () => {
             )}
 
             {destination.highlights && destination.highlights.length > 0 && (
-              <Card>
+              <Card className="mb-6">
                 <CardHeader>
                   <CardTitle>Highlights</CardTitle>
                 </CardHeader>
@@ -188,6 +194,87 @@ const DestinationDetail = () => {
                       </li>
                     ))}
                   </ul>
+                </CardContent>
+              </Card>
+            )}
+
+            {(destination.visiting_hours || destination.entry_fee) && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>Visiting Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {destination.visiting_hours && (
+                    <div className="flex items-start gap-3">
+                      <Clock className="h-5 w-5 text-primary mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-foreground">Visiting Hours</p>
+                        <p className="text-muted-foreground">{destination.visiting_hours}</p>
+                      </div>
+                    </div>
+                  )}
+                  {destination.entry_fee && (
+                    <div className="flex items-start gap-3">
+                      <DollarSign className="h-5 w-5 text-primary mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-foreground">Entry Fee</p>
+                        <p className="text-muted-foreground">{destination.entry_fee}</p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {(destination.transport_details || destination.distance_from_town) && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bus className="h-5 w-5" />
+                    How to Reach
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {destination.distance_from_town && (
+                    <div className="flex items-start gap-3">
+                      <Navigation className="h-5 w-5 text-primary mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-foreground">Distance & Travel Time</p>
+                        <p className="text-muted-foreground">
+                          {destination.distance_from_town}
+                          {destination.travel_time && ` • ${destination.travel_time}`}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {destination.transport_details && (
+                    <div className="p-4 bg-muted rounded-lg">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {destination.transport_details}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {destination.location_coordinates && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>Location</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="aspect-video rounded-lg overflow-hidden border">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      style={{ border: 0 }}
+                      src={`https://www.google.com/maps?q=${destination.location_coordinates}&output=embed`}
+                      allowFullScreen
+                      loading="lazy"
+                    />
+                  </div>
                 </CardContent>
               </Card>
             )}
