@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -35,16 +35,18 @@ const Packages = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedPackage, setExpandedPackage] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const destinationId = searchParams.get('destination');
 
   useEffect(() => {
     fetchPackages();
-  }, []);
+  }, [destinationId]);
 
   const fetchPackages = async () => {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('packages')
         .select(`
           *,
@@ -57,8 +59,13 @@ const Packages = () => {
             activities,
             meals_included
           )
-        `)
-        .order('price', { ascending: true });
+        `);
+      
+      if (destinationId) {
+        query = query.eq('destination_id', destinationId);
+      }
+      
+      const { data, error } = await query.order('price', { ascending: true });
 
       if (error) throw error;
       setPackages(data || []);
@@ -119,7 +126,9 @@ const Packages = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Travel Packages
+            {packages.length > 0 && packages[0].destinations?.name 
+              ? `${packages[0].destinations.name} Packages – Coffee, Hills & Adventure`
+              : 'Travel Packages'}
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             All-inclusive packages with detailed itineraries for unforgettable experiences
