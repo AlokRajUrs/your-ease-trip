@@ -17,10 +17,13 @@ interface Hotel {
   price_per_night: number;
   rating: number;
   image_url: string;
+  images?: string[];
   amenities: string[];
   distance_from_center: string;
   budget_category: string;
   destinations: { name: string; country: string } | null;
+  nearby_places?: { name: string; distance: string }[];
+  contact_number?: string;
 }
 
 const Hotels = () => {
@@ -53,7 +56,17 @@ const Hotels = () => {
       const { data, error } = await query.order('rating', { ascending: false });
 
       if (error) throw error;
-      setHotels(data || []);
+      
+      // Transform the data to properly handle JSON fields
+      const transformedData = (data || []).map(hotel => ({
+        ...hotel,
+        nearby_places: hotel.nearby_places ? 
+          (Array.isArray(hotel.nearby_places) ? hotel.nearby_places : JSON.parse(String(hotel.nearby_places))) 
+          : undefined,
+        images: hotel.images || (hotel.image_url ? [hotel.image_url] : [])
+      }));
+      
+      setHotels(transformedData);
     } catch (error: any) {
       toast.error('Failed to load hotels');
     } finally {
@@ -216,6 +229,20 @@ const Hotels = () => {
                           <Badge key={index} variant="secondary" className="text-xs">
                             {amenity}
                           </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {hotel.nearby_places && hotel.nearby_places.length > 0 && (
+                    <div className="mb-4 p-3 bg-accent/10 rounded-lg">
+                      <h4 className="text-sm font-semibold mb-2 text-foreground">Nearby Places</h4>
+                      <div className="space-y-1">
+                        {hotel.nearby_places.slice(0, 3).map((place, index) => (
+                          <div key={index} className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground">{place.name}</span>
+                            <span className="text-primary font-medium">{place.distance}</span>
+                          </div>
                         ))}
                       </div>
                     </div>
