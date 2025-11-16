@@ -281,14 +281,28 @@ const DestinationDetail = () => {
 
             <div className="mt-6 flex gap-4">
               <Button 
-                onClick={() => navigate(`/packages?destination=${id}`)}
+                onClick={() => {
+                  if (!user) {
+                    toast.error('Please log in to explore packages for this destination');
+                    navigate('/auth');
+                    return;
+                  }
+                  navigate(`/packages?destination=${id}`);
+                }}
                 className="flex-1"
               >
                 View Packages
               </Button>
               <Button 
                 variant="outline"
-                onClick={() => navigate(`/hotels?destination=${id}`)}
+                onClick={() => {
+                  if (!user) {
+                    toast.error('Please log in to find hotels for this destination');
+                    navigate('/auth');
+                    return;
+                  }
+                  navigate(`/hotels?destination=${id}`);
+                }}
                 className="flex-1"
               >
                 Find Hotels
