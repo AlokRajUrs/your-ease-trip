@@ -281,7 +281,7 @@ const DestinationDetail = () => {
 
             <div className="mt-6 flex gap-4">
               <Button 
-                onClick={() => navigate('/packages')}
+                onClick={() => navigate(`/packages?destination=${id}`)}
                 className="flex-1"
               >
                 View Packages
