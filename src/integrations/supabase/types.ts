@@ -112,33 +112,51 @@ export type Database = {
           country: string
           created_at: string
           description: string
+          distance_from_town: string | null
+          entry_fee: string | null
           featured: boolean | null
           highlights: string[] | null
           id: string
           image_url: string
+          location_coordinates: string | null
           name: string
+          transport_details: string | null
+          travel_time: string | null
+          visiting_hours: string | null
         }
         Insert: {
           best_time_to_visit?: string | null
           country: string
           created_at?: string
           description: string
+          distance_from_town?: string | null
+          entry_fee?: string | null
           featured?: boolean | null
           highlights?: string[] | null
           id?: string
           image_url: string
+          location_coordinates?: string | null
           name: string
+          transport_details?: string | null
+          travel_time?: string | null
+          visiting_hours?: string | null
         }
         Update: {
           best_time_to_visit?: string | null
           country?: string
           created_at?: string
           description?: string
+          distance_from_town?: string | null
+          entry_fee?: string | null
           featured?: boolean | null
           highlights?: string[] | null
           id?: string
           image_url?: string
+          location_coordinates?: string | null
           name?: string
+          transport_details?: string | null
+          travel_time?: string | null
+          visiting_hours?: string | null
         }
         Relationships: []
       }
