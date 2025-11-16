@@ -164,39 +164,48 @@ export type Database = {
         Row: {
           amenities: string[] | null
           budget_category: string
+          contact_number: string | null
           created_at: string
           description: string
           destination_id: string | null
           distance_from_center: string | null
           id: string
           image_url: string
+          images: string[] | null
           name: string
+          nearby_places: Json | null
           price_per_night: number
           rating: number
         }
         Insert: {
           amenities?: string[] | null
           budget_category: string
+          contact_number?: string | null
           created_at?: string
           description: string
           destination_id?: string | null
           distance_from_center?: string | null
           id?: string
           image_url: string
+          images?: string[] | null
           name: string
+          nearby_places?: Json | null
           price_per_night: number
           rating: number
         }
         Update: {
           amenities?: string[] | null
           budget_category?: string
+          contact_number?: string | null
           created_at?: string
           description?: string
           destination_id?: string | null
           distance_from_center?: string | null
           id?: string
           image_url?: string
+          images?: string[] | null
           name?: string
+          nearby_places?: Json | null
           price_per_night?: number
           rating?: number
         }
