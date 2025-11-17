@@ -95,10 +95,12 @@ const Destinations = () => {
             {filteredDestinations.map((destination) => (
               <Card 
                 key={destination.id} 
-                className="shadow-card hover:shadow-hover transition-all group cursor-pointer overflow-hidden"
-                onClick={() => navigate(`/destinations/${destination.id}`)}
+                className="shadow-card hover:shadow-hover transition-all group overflow-hidden"
               >
-                <div className="relative h-48 overflow-hidden">
+                <div 
+                  className="relative h-48 overflow-hidden cursor-pointer"
+                  onClick={() => navigate(`/destinations/${destination.id}`)}
+                >
                   <img
                     src={destination.image_url}
                     alt={destination.name}
@@ -110,7 +112,10 @@ const Destinations = () => {
                     </div>
                   )}
                 </div>
-                <CardHeader>
+                <CardHeader 
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/destinations/${destination.id}`)}
+                >
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-xl mb-1">{destination.name}</CardTitle>
@@ -125,9 +130,34 @@ const Destinations = () => {
                   <p className="text-muted-foreground line-clamp-2 mb-4">
                     {destination.description}
                   </p>
-                  <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    View Details
-                  </Button>
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => navigate(`/destinations/${destination.id}`)}
+                    >
+                      Details
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/packages?destination=${destination.id}`);
+                      }}
+                    >
+                      Packages
+                    </Button>
+                    <Button 
+                      variant="secondary"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/hotels?destination=${destination.id}`);
+                      }}
+                    >
+                      Hotels
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}

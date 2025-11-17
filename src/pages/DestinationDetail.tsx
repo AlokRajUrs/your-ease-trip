@@ -148,13 +148,28 @@ const DestinationDetail = () => {
                   {destination.country}
                 </p>
               </div>
-              <Button
-                variant={isSaved ? "default" : "outline"}
-                size="icon"
-                onClick={handleSaveDestination}
-              >
-                <Heart className={`h-5 w-5 ${isSaved ? 'fill-current' : ''}`} />
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => navigate(`/packages?destination=${destination.id}`)}
+                >
+                  View Packages
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate(`/hotels?destination=${destination.id}`)}
+                >
+                  View Hotels
+                </Button>
+                {user && (
+                  <Button
+                    variant={isSaved ? "default" : "outline"}
+                    size="icon"
+                    onClick={handleSaveDestination}
+                  >
+                    <Heart className={`h-5 w-5 ${isSaved ? 'fill-current' : ''}`} />
+                  </Button>
+                )}
+              </div>
             </div>
 
             <Card className="mb-6">
