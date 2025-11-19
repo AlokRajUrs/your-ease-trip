@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, Loader2, MapPin, Package, Hotel as HotelIcon, Ticket, Heart } from 'lucide-react';
+import { Calendar, Loader2, MapPin, Package, Hotel as HotelIcon, Ticket, Heart, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Booking {
@@ -90,6 +90,22 @@ const Profile = () => {
       toast.success('Destination removed');
     } catch (error: any) {
       toast.error('Failed to remove destination');
+    }
+  };
+
+  const cancelBooking = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', user!.id);
+
+      if (error) throw error;
+      setBookings(bookings.filter(b => b.id !== id));
+      toast.success('Booking cancelled');
+    } catch (error: any) {
+      toast.error('Failed to cancel booking');
     }
   };
 
@@ -178,6 +194,15 @@ const Profile = () => {
                           ${booking.total_price}
                         </span>
                       </div>
+                      <Button 
+                        variant="destructive" 
+                        size="sm" 
+                        className="w-full mt-4"
+                        onClick={() => cancelBooking(booking.id)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Cancel Booking
+                      </Button>
                     </CardContent>
                   </Card>
                 ))
