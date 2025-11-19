@@ -13,6 +13,8 @@ import Packages from "./pages/Packages";
 import Booking from "./pages/Booking";
 import Hotels from "./pages/Hotels";
 import Shopping from "./pages/Shopping";
+import ProductDetail from "./pages/ProductDetail";
+import Checkout from "./pages/Checkout";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
@@ -56,6 +58,16 @@ const App = () => (
             <Route path="/shopping" element={
               <ProtectedRoute>
                 <Shopping />
+              </ProtectedRoute>
+            } />
+            <Route path="/products/:id" element={
+              <ProtectedRoute>
+                <ProductDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/checkout" element={
+              <ProtectedRoute>
+                <Checkout />
               </ProtectedRoute>
             } />
             <Route path="/profile" element={

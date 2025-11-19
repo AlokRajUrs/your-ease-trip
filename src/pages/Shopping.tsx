@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
@@ -6,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Loader2, Search, ShoppingCart, Plus, Minus } from 'lucide-react';
+import { Loader2, Search, ShoppingCart, Plus, Minus, Star } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Product {
@@ -24,6 +25,7 @@ interface CartItem extends Product {
 }
 
 const Shopping = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -139,6 +141,7 @@ const Shopping = () => {
   );
 
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const rating = 4.5; // Static rating for display
 
   if (loading) {
     return (
@@ -201,22 +204,47 @@ const Shopping = () => {
                     
                     <CardHeader>
                       <CardTitle className="text-lg mb-1">{product.name}</CardTitle>
+                      <div className="flex items-center gap-1 mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < Math.floor(rating)
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-muted'
+                            }`}
+                          />
+                        ))}
+                        <span className="text-sm text-muted-foreground ml-1">({rating})</span>
+                      </div>
                       <CardDescription className="line-clamp-2">
                         {product.description}
                       </CardDescription>
                     </CardHeader>
                     
                     <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold text-primary">
-                          ${product.price}
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <p className="text-2xl font-bold text-primary">
+                            ₹{product.price}
+                          </p>
+                          <Badge variant={product.stock > 0 ? "default" : "secondary"}>
+                            {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                          </Badge>
                         </div>
-                        <Button 
-                          onClick={() => addToCart(product)}
-                          size="sm"
-                          className="gap-2"
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          onClick={() => navigate(`/products/${product.id}`)}
+                          variant="outline"
                         >
-                          <ShoppingCart className="h-4 w-4" />
+                          View Details
+                        </Button>
+                        <Button
+                          onClick={() => addToCart(product)}
+                          disabled={product.stock === 0}
+                        >
+                          <ShoppingCart className="mr-2 h-4 w-4" />
                           Add to Cart
                         </Button>
                       </div>
@@ -256,7 +284,7 @@ const Shopping = () => {
                           <div className="flex-1">
                             <p className="font-semibold text-sm mb-1">{item.name}</p>
                             <p className="text-sm text-muted-foreground mb-2">
-                              ${item.price} each
+                              ₹{item.price} each
                             </p>
                             <div className="flex items-center gap-2">
                               <Button
@@ -286,10 +314,10 @@ const Shopping = () => {
                       <div className="flex justify-between items-center mb-4">
                         <span className="font-semibold">Total:</span>
                         <span className="text-2xl font-bold text-primary">
-                          ${cartTotal.toFixed(2)}
+                          ₹{cartTotal.toFixed(2)}
                         </span>
                       </div>
-                      <Button className="w-full" onClick={() => toast.success('Checkout coming soon!')}>
+                      <Button className="w-full" onClick={() => navigate('/checkout')}>
                         Proceed to Checkout
                       </Button>
                     </div>
