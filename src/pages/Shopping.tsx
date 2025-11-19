@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Loader2, Search, ShoppingCart, Plus, Minus, Star } from 'lucide-react';
+import { Loader2, Search, ShoppingCart, Plus, Minus, Star, X, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Product {
@@ -135,6 +135,39 @@ const Shopping = () => {
     }
   };
 
+  const clearCart = async () => {
+    if (!user) return;
+
+    try {
+      await supabase
+        .from('cart_items')
+        .delete()
+        .eq('user_id', user.id);
+
+      await fetchCart();
+      toast.success('Cart cleared');
+    } catch (error: any) {
+      toast.error('Failed to clear cart');
+    }
+  };
+
+  const removeCartItem = async (productId: string) => {
+    if (!user) return;
+
+    try {
+      await supabase
+        .from('cart_items')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('product_id', productId);
+
+      await fetchCart();
+      toast.success('Item removed from cart');
+    } catch (error: any) {
+      toast.error('Failed to remove item');
+    }
+  };
+
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.category.toLowerCase().includes(searchTerm.toLowerCase())
@@ -258,13 +291,28 @@ const Shopping = () => {
           <div className="lg:col-span-1">
             <Card className="sticky top-20 shadow-hover">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ShoppingCart className="h-5 w-5" />
-                  Shopping Cart
-                </CardTitle>
-                <CardDescription>
-                  {cart.length} {cart.length === 1 ? 'item' : 'items'}
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <ShoppingCart className="h-5 w-5" />
+                      Shopping Cart
+                    </CardTitle>
+                    <CardDescription>
+                      {cart.length} {cart.length === 1 ? 'item' : 'items'}
+                    </CardDescription>
+                  </div>
+                  {cart.length > 0 && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={clearCart}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Clear All
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 {cart.length === 0 ? (
@@ -275,7 +323,15 @@ const Shopping = () => {
                   <>
                     <div className="space-y-4 mb-4">
                       {cart.map((item) => (
-                        <div key={item.id} className="flex gap-3 pb-3 border-b border-border">
+                        <div key={item.id} className="flex gap-3 pb-3 border-b border-border relative group">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="absolute -top-1 -right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => removeCartItem(item.id)}
+                          >
+                            <X className="h-4 w-4 text-destructive" />
+                          </Button>
                           <img
                             src={item.image_url}
                             alt={item.name}
