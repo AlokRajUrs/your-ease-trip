@@ -5,8 +5,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, MapPin, Calendar, Heart, Loader2, Clock, DollarSign, Bus, Navigation } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Heart, Loader2, Clock, DollarSign, Bus, Navigation, Images } from 'lucide-react';
 import { toast } from 'sonner';
+import ImageGallery from '@/components/ImageGallery';
 
 interface Destination {
   id: string;
@@ -16,6 +17,7 @@ interface Destination {
   best_time_to_visit: string;
   highlights: string[];
   image_url: string;
+  images?: string[];
   visiting_hours?: string;
   entry_fee?: string;
   transport_details?: string;
@@ -196,6 +198,20 @@ const DestinationDetail = () => {
                       </li>
                     ))}
                   </ul>
+                </CardContent>
+              </Card>
+            )}
+
+            {destination.images && destination.images.length > 0 && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Images className="h-5 w-5" />
+                    Photo Gallery
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ImageGallery images={destination.images} altText={destination.name} />
                 </CardContent>
               </Card>
             )}
