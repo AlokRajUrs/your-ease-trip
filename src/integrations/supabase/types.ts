@@ -118,6 +118,7 @@ export type Database = {
           highlights: string[] | null
           id: string
           image_url: string
+          images: string[] | null
           location_coordinates: string | null
           name: string
           transport_details: string | null
@@ -135,6 +136,7 @@ export type Database = {
           highlights?: string[] | null
           id?: string
           image_url: string
+          images?: string[] | null
           location_coordinates?: string | null
           name: string
           transport_details?: string | null
@@ -152,6 +154,7 @@ export type Database = {
           highlights?: string[] | null
           id?: string
           image_url?: string
+          images?: string[] | null
           location_coordinates?: string | null
           name?: string
           transport_details?: string | null
