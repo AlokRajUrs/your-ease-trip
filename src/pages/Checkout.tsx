@@ -86,6 +86,7 @@ const Checkout = () => {
           total_amount: total,
           payment_method: paymentMethod,
           payment_status: 'completed',
+          status: 'processing',
         })
         .select()
         .single();
