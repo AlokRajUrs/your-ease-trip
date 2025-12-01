@@ -78,6 +78,34 @@ const Checkout = () => {
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
 
+      // Create order
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          user_id: user.id,
+          total_amount: total,
+          payment_method: paymentMethod,
+          payment_status: 'completed',
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // Create order items
+      const orderItems = items.map(item => ({
+        order_id: orderData.id,
+        product_id: item.id,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
       // Clear cart if not direct buy
       if (!directBuy) {
         await supabase
@@ -87,7 +115,7 @@ const Checkout = () => {
       }
 
       toast.success('Order placed successfully!');
-      navigate('/profile');
+      navigate('/shopping/my-bookings');
     } catch (error: any) {
       toast.error('Payment failed. Please try again.');
     } finally {
