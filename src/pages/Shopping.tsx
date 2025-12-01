@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Loader2, Search, ShoppingCart, Plus, Minus, Star, X, Trash2 } from 'lucide-react';
+import { Loader2, Search, ShoppingCart, Plus, Minus, Star, X, Trash2, Package } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Product {
@@ -193,9 +193,19 @@ const Shopping = () => {
       
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Travel Essentials
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+              Travel Essentials
+            </h1>
+            <Button
+              variant="outline"
+              onClick={() => navigate('/shopping/my-bookings')}
+              className="gap-2"
+            >
+              <Package className="h-4 w-4" />
+              My Orders
+            </Button>
+          </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
             Everything you need for your perfect journey
           </p>
