@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plane } from 'lucide-react';
+import logo from '@/assets/logo.jpg';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -41,9 +41,7 @@ const Auth = () => {
       <Card className="w-full max-w-md shadow-hover">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-gradient-hero rounded-full">
-              <Plane className="h-8 w-8 text-primary-foreground" />
-            </div>
+            <img src={logo} alt="TripTastic Holidays" className="h-20 w-auto" />
           </div>
           <CardTitle className="text-2xl">Welcome to TripTastic Holidays</CardTitle>
           <CardDescription>Plan your dream vacation with us</CardDescription>
