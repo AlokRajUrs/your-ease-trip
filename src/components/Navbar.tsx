@@ -20,6 +20,7 @@ const Navbar = () => {
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="TripTastic Holidays" className="h-10 w-auto" />
+            <span className="font-bold text-xl text-primary">TripTastic Holidays</span>
           </Link>
 
           {user ? (
