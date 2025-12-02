@@ -45,7 +45,7 @@ const Auth = () => {
               <Plane className="h-8 w-8 text-primary-foreground" />
             </div>
           </div>
-          <CardTitle className="text-2xl">Welcome to TravelEase</CardTitle>
+          <CardTitle className="text-2xl">Welcome to TripTastic Holidays</CardTitle>
           <CardDescription>Plan your dream vacation with us</CardDescription>
         </CardHeader>
         <CardContent>
