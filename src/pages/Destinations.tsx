@@ -130,34 +130,14 @@ const Destinations = () => {
                   <p className="text-muted-foreground line-clamp-2 mb-4">
                     {destination.description}
                   </p>
-                  <div className="grid grid-cols-3 gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => navigate(`/destinations/${destination.id}`)}
-                    >
-                      Details
-                    </Button>
-                    <Button 
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/packages?destination=${destination.id}`);
-                      }}
-                    >
-                      Packages
-                    </Button>
-                    <Button 
-                      variant="secondary"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/hotels?destination=${destination.id}`);
-                      }}
-                    >
-                      Hotels
-                    </Button>
-                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="w-full"
+                    onClick={() => navigate(`/destinations/${destination.id}`)}
+                  >
+                    View Details
+                  </Button>
                 </CardContent>
               </Card>
             ))}
