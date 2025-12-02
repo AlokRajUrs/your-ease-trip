@@ -145,7 +145,7 @@ const Home = () => {
             <CardHeader>
               <CardTitle className="text-3xl mb-4">Ready to Start Your Adventure?</CardTitle>
               <CardDescription className="text-lg">
-                Join thousands of travelers who trust TravelEase for their journeys
+                Join thousands of travelers who trust TripTastic Holidays for their journeys
               </CardDescription>
             </CardHeader>
             <CardContent>
