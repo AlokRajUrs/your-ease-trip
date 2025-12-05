@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Loader2, MapPin, Star, DollarSign, Search } from 'lucide-react';
+import { Loader2, MapPin, Star, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Hotel {
@@ -251,10 +251,9 @@ const Hotels = () => {
                   <div className="flex items-center justify-between pt-4 border-t border-border">
                     <div>
                       <p className="text-xs text-muted-foreground">per night</p>
-                      <div className="flex items-center gap-1 text-2xl font-bold text-primary">
-                        <DollarSign className="h-5 w-5" />
-                        {hotel.price_per_night}
-                      </div>
+                      <p className="text-2xl font-bold text-primary">
+                        ₹{hotel.price_per_night}
+                      </p>
                     </div>
                     <Button 
                       onClick={() => handleBookHotel(hotel)}
