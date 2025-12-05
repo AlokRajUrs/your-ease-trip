@@ -160,14 +160,14 @@ const Booking = () => {
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-muted-foreground">Base Price per Person:</span>
                       <span className="font-semibold">
-                        ${bookingData.transportType === 'train' ? 50 : 
+                        ₹{bookingData.transportType === 'train' ? 50 : 
                           bookingData.transportType === 'bus' ? 30 : 100}
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-lg font-bold">
                       <span>Total Price:</span>
                       <span className="text-primary">
-                        ${(bookingData.transportType === 'train' ? 50 : 
+                        ₹{(bookingData.transportType === 'train' ? 50 : 
                            bookingData.transportType === 'bus' ? 30 : 100) * bookingData.passengers}
                       </span>
                     </div>
